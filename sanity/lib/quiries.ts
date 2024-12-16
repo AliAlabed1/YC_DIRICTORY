@@ -20,7 +20,7 @@ export const STARTUP_QUIRY = defineQuery(`
 `)
 
 export const STARTUP_BY_ID_QUERY = defineQuery(`
-    *[_type == 'startup' && _id == $id]{
+    *[_type == 'startup' && _id == $id][0]{
         _id,
         title,
         slug,
@@ -40,4 +40,10 @@ export const STARTUP_BY_ID_QUERY = defineQuery(`
         _createdAt
 
     } 
+`)
+
+export const STARTUP_VIEWS_QUERY = defineQuery(`
+    *[_type == 'startup' && _id == $id][0]{
+        _id,views
+    }
 `)

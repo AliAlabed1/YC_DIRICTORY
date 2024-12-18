@@ -9,10 +9,11 @@ import { formSchema } from '@/lib/validation'
 import {z} from 'zod'
 import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
+import { createPitch } from '@/lib/actions'
 const StratupForm = () => {
     const [errors,setErrors] = useState<Record<string,string>>({})
     const {toast} = useToast();  
-    const [pitch,setPitch] = useState<string>();
+    const [pitch,setPitch] = useState<string>('');
     const router = useRouter();
     const handleFormSubmit = async (prevState:any,formData:FormData) => {
         try {
@@ -24,18 +25,18 @@ const StratupForm = () => {
                 pitch,
             }
             await formSchema.parseAsync(formValues)
-            console.log(formValues)
-            // const result = await createDiffieHellman(prevState,formData,pitch)
+            
+            const result = await createPitch(prevState,formData,pitch)
 
-            // console.log(result)
-            // if(result.status == 'SUCCESS'){
-            //     toast({
-            //         title:'Sucess',
-            //         description:"Your startup pitch has been created successfuly",
-            //     })
-            //     router.push(`/stratup/${result.id}`)
-            //     return result;
-            // }
+            
+            if(result.status == 'SUCCESS'){
+                toast({
+                    title:'Sucess',
+                    description:"Your startup pitch has been created successfuly",
+                })
+                router.push(`/stratup/${result._id}`)
+                return result;
+            }
         } catch (error) {
             if(error instanceof z.ZodError){
                 const fieldErrors = error.flatten().fieldErrors;
